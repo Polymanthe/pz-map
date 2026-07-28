@@ -1,0 +1,78 @@
+version: '3'
+
+dotenv:
+  - .env
+
+vars:
+  WORKERS: '{{.WORKERS | default "2"}}'
+  CACHE_MB: '{{.CACHE_MB | default "256"}}'
+  SHM_SIZE: '{{.SHM_SIZE | default "4g"}}'
+  MAX_ZOOM: '{{.MAX_ZOOM | default "6"}}'
+  QUALITY: '{{.QUALITY | default "78"}}'
+
+tasks:
+  default:
+    silent: true
+    cmds:
+      - task --list
+
+  generate:riverside:
+    desc: Render and publish the Riverside area
+    cmds:
+      - task: generate
+        vars:
+          NAME: riverside
+          SCOPE: 19,15,6,6
+
+  generate:full:
+    desc: Render and publish the complete map
+    cmds:
+      - task: generate
+        vars:
+          NAME: full
+          SCOPE: full
+
+  generate:
+    internal: true
+    requires:
+      vars: [NAME, SCOPE]
+    cmds:
+      - >-
+        ./pipeline/scripts/build_tiles.sh
+        --scope "{{.SCOPE}}"
+        --render-output "dist/pipeline/render/{{.NAME}}"
+        --dist "dist/map"
+        --workers "{{.WORKERS}}"
+        --cache-mb "{{.CACHE_MB}}"
+        --shm-size "{{.SHM_SIZE}}"
+        --max-zoom "{{.MAX_ZOOM}}"
+        --quality "{{.QUALITY}}"
+
+  app:start:
+    desc: Ensure a map exists, then build and start the application
+    deps:
+      - task: app:ensure-map
+    cmds:
+      - docker compose up -d --build --force-recreate web
+
+  app:ensure-map:
+    internal: true
+    status:
+      - test -f dist/map/map-manifest.json
+    cmds:
+      - task: generate:riverside
+
+  app:stop:
+    desc: Stop the application
+    cmds:
+      - docker compose down
+
+  app:logs:
+    desc: Follow WebUI and real-time server logs
+    cmds:
+      - docker compose logs --follow web server
+
+  app:status:
+    desc: Show application container status
+    cmds:
+      - docker compose ps web server

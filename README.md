@@ -17,6 +17,7 @@ real-time cursor sharing service.
 │   ├── map/                Map currently served by Nginx
 │   ├── pipeline/           Resumable renders, logs, and spike output
 │   └── archive/            Legacy local artifacts kept outside Git
+├── Taskfile.yml            Generation and application lifecycle commands
 └── compose.yaml            Local application orchestration
 ```
 
@@ -37,6 +38,7 @@ package until a concrete requirement needs one.
 ## Requirements
 
 - Docker Desktop with Docker Compose
+- [Task](https://taskfile.dev/) 3.50 or newer
 - Node.js 22 or newer for local tests
 - Python 3.10 or newer with Pillow for tile normalization
 - Project Zomboid B41 assets for rendering
@@ -48,15 +50,19 @@ defaults to the usual Steam installation below `$HOME` on macOS.
 
 ## Start the application
 
-The repository currently serves the validated Riverside map from `dist/map`:
+The application serves whichever normalized map is published in `dist/map`:
 
 ```bash
-docker compose up -d --build web
+task app:start
+task app:status
+task app:logs
+task app:stop
 ```
 
-Open <http://localhost:8080>. Compose starts both the web interface and the
-real-time service. Nginx serves static files and tiles, and proxies
-`/socket.io/` to the server.
+If `dist/map/map-manifest.json` is missing, `app:start` generates Riverside
+first. Open <http://localhost:8080> after startup. Compose starts both the web
+interface and the real-time service. Nginx serves static files and tiles, and
+proxies `/socket.io/` to the server.
 
 To test cursor sharing, click **Partager mon curseur**, copy the reader link,
 and open it in another tab. The link grants read access only. The publisher
@@ -69,14 +75,28 @@ the application through another hostname.
 
 ## Render tiles
 
-The full-map command uses bounded memory and writes only below `dist/`:
+Use the named tasks to render either supported scope without remembering its
+coordinates or output paths:
 
 ```bash
-./pipeline/scripts/build_tiles.sh \
-  --workers 2 \
-  --cache-mb 256 \
-  --shm-size 4g
+task generate:riverside
+task generate:full
 ```
+
+Both tasks publish the normalized result to `dist/map`, which is the directory
+served by the WebUI. Riverside keeps resumable state in
+`dist/pipeline/render/riverside`; the full map uses
+`dist/pipeline/render/full`.
+
+The default bounded-memory profile uses two workers, a 256 MiB tile cache, and
+4 GiB of shared memory. Values can be overridden for one invocation:
+
+```bash
+task generate:full WORKERS=4 CACHE_MB=512 SHM_SIZE=6g
+```
+
+`PZ_ROOT` can be placed in `.env`; otherwise the pipeline uses the usual Steam
+installation below `$HOME` on macOS.
 
 Default outputs:
 
