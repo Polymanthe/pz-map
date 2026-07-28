@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#111713">
+    <title>Project Zomboid Cartography</title>
+    <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar" aria-label="Navigation de la carte">
+        <header class="brand">
+          <div class="brand-mark">PZ</div>
+          <div>
+            <p class="eyebrow">Knox Country Survey</p>
+            <h1>Cartographie</h1>
+          </div>
+          <button class="icon-button sidebar-close" id="sidebar-close" aria-label="Fermer le panneau">×</button>
+        </header>
+
+        <section class="sidebar-section">
+          <div class="section-heading">
+            <h2>Secteurs</h2>
+            <span class="counter" id="poi-count">0</span>
+          </div>
+          <div class="place-list" id="place-list"></div>
+        </section>
+
+        <section class="sidebar-section live-section" aria-labelledby="live-heading">
+          <div class="section-heading">
+            <h2 id="live-heading">Temps réel</h2>
+          </div>
+          <p class="live-status" data-state="offline">
+            <span class="live-status-dot" aria-hidden="true"></span>
+            <span id="live-status" role="status" aria-live="polite">Hors ligne</span>
+          </p>
+          <p class="live-help" id="live-help">Aucun partage actif.</p>
+          <button class="primary-button live-share-button" id="live-share" type="button">Partager mon curseur</button>
+          <div class="live-host-panel" id="live-host-panel" hidden>
+            <label for="live-reader-link">Lien lecteur</label>
+            <input id="live-reader-link" type="url" readonly>
+            <div class="live-actions">
+              <button class="secondary-button" id="live-copy" type="button">Copier</button>
+              <button class="secondary-button live-stop-button" id="live-stop" type="button">Arrêter</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sidebar-section marker-section">
+          <div class="section-heading">
+            <h2>Marqueurs</h2>
+            <span class="counter" id="marker-count">0</span>
+          </div>
+          <div class="marker-actions">
+            <button class="primary-button" id="add-marker">Ajouter</button>
+            <button class="secondary-button" id="export-markers">Exporter</button>
+            <button class="secondary-button" id="import-markers">Importer</button>
+            <input id="marker-file" type="file" accept="application/json" hidden>
+          </div>
+          <div class="marker-list" id="marker-list">
+            <p class="empty-state">Aucun repère enregistré.</p>
+          </div>
+        </section>
+
+        <footer class="sidebar-footer">
+          <span id="map-version">Chargement...</span>
+          <span class="status-dot" aria-hidden="true"></span>
+        </footer>
+      </aside>
+
+      <main class="map-stage">
+        <div id="map" aria-label="Carte interactive de Project Zomboid"></div>
+        <div class="map-toolbar">
+          <button class="icon-button menu-button" id="sidebar-open" aria-label="Ouvrir le panneau">☰</button>
+          <label class="floor-control">
+            <span>Niveau</span>
+            <select id="floor-select" aria-label="Niveau de la carte"></select>
+          </label>
+        </div>
+        <div class="coordinate-readout" aria-live="polite">
+          <span class="coordinate-label">POSITION</span>
+          <strong id="coordinate-value">X ---- · Y ---- · Z 0</strong>
+        </div>
+        <div class="map-status" id="map-status">Initialisation de la carte...</div>
+      </main>
+    </div>
+
+    <dialog class="marker-dialog" id="marker-dialog">
+      <form method="dialog" id="marker-form">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">Nouveau signalement</p>
+            <h2>Ajouter un marqueur</h2>
+          </div>
+          <button class="icon-button" value="cancel" formnovalidate aria-label="Fermer">×</button>
+        </div>
+        <label>
+          Nom
+          <input name="title" required maxlength="80" autocomplete="off">
+        </label>
+        <label>
+          Catégorie
+          <select name="category">
+            <option value="base">Base</option>
+            <option value="safehouse">Safehouse</option>
+            <option value="loot">Loot</option>
+            <option value="danger">Danger</option>
+          </select>
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" rows="3" maxlength="500"></textarea>
+        </label>
+        <p class="dialog-coordinates" id="dialog-coordinates"></p>
+        <div class="dialog-actions">
+          <button class="secondary-button" value="cancel" formnovalidate>Annuler</button>
+          <button class="primary-button" value="save">Enregistrer</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/vendor/leaflet/leaflet.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

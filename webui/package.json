@@ -1,0 +1,11 @@
+{
+  "name": "pz-map-webui",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "leaflet": "1.9.4"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

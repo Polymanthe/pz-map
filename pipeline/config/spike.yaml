@@ -1,0 +1,50 @@
+pz_root: /game
+output_root: /output
+mod_root: /mods
+custom_root: /custom
+
+map_conf_default: default.txt
+map_conf:
+  - vanilla.txt
+
+use_depend_texture_only: true
+base_map: default
+mod_maps:
+
+render_conf:
+  verbose: true
+  profile: false
+  worker_count: 4
+  break_key: ''
+
+  tile_size: 1024
+  tile_align_levels: 3
+  layer_range: [0, 1]
+  dzi_cell_range:
+    - [35, 32, 1, 1]
+  render_cell_range:
+    - [35, 32, 1, 1]
+  omit_levels: 0
+
+  image_fmt: webp
+  image_fmt_base_layer0: jpg
+  image_save_options:
+    jpg:
+      quality: 78
+      optimize: true
+      progressive: true
+    webp:
+      quality: 78
+
+  enable_cache: false
+  use_mark: false
+  plants_conf:
+    season: summer2
+    snow: false
+    flower: false
+    large_bush: false
+    tree_size: 2
+    jumbo_tree_size: 3
+    jumbo_tree_type: 1
+    no_ground_cover: false
+    unify_tree_type: 0
