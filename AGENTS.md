@@ -51,6 +51,20 @@ through an explicit path supplied by the user or through the configured
 - Session stop and expiration must remove server state and notify room members.
 - Update `ALLOWED_ORIGINS` when adding a deployment hostname.
 
+## Roadmap Issues
+
+- Roadmap issues must be vertical product increments that deliver observable
+  user value and can be demonstrated end to end in the WebUI or in Project
+  Zomboid.
+- Every feature issue must describe the user outcome, the playable or in-game
+  validation scenario, and objective acceptance criteria.
+- Keep architecture, tests, adapters, and refactors as implementation checklist
+  items inside the vertical issue. Create a separate technical issue only when
+  it has independently testable value or is a time-boxed spike that resolves a
+  documented uncertainty.
+- Use milestones and Project fields to group work; do not create epics that are
+  only containers for technical tasks.
+
 ## Commands
 
 Run all relevant checks before publishing changes:
