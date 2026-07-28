@@ -3,6 +3,8 @@
 Project Zomboid B41 map renderer, Leaflet web interface, and ephemeral
 real-time cursor sharing service.
 
+![Project Zomboid map viewer showing Riverside, markers, and cursor sharing](docs/pz-map-riverside.jpg)
+
 ## Architecture
 
 ```text
@@ -10,6 +12,7 @@ real-time cursor sharing service.
 ├── webui/                  Static Leaflet application and Nginx image
 ├── server/                 Node.js and Socket.IO real-time service
 ├── pipeline/               pzmap2dzi rendering and tile normalization
+├── docs/                   Screenshots and repository documentation assets
 ├── dist/                   Generated artifacts, ignored by Git
 │   ├── map/                Map currently served by Nginx
 │   ├── pipeline/           Resumable renders, logs, and spike output
