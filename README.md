@@ -1,5 +1,7 @@
 # Project Zomboid Map
 
+![Project Zomboid Build 41](https://img.shields.io/badge/Project_Zomboid-Build_41-darkred?style=flat&logo=steam)
+
 Project Zomboid B41 map renderer, Leaflet web interface, and ephemeral
 real-time cursor sharing service.
 
