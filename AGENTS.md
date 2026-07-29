@@ -53,6 +53,11 @@ through an explicit path supplied by the user or through the configured
 
 ## Roadmap Issues
 
+- GitHub Issues and GitHub Projects for `Polymanthe/pz-map` are the source of
+  truth for the product roadmap.
+- Review existing open and closed issues and the GitHub Project before planning
+  or creating roadmap work.
+- Do not maintain a duplicate roadmap in repository documentation.
 - Roadmap issues must be vertical product increments that deliver observable
   user value and can be demonstrated end to end in the WebUI or in Project
   Zomboid.
